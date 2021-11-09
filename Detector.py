@@ -13,6 +13,9 @@
 # limitations under the License.
 
 
+import cv2
+import time
+
 def predict(project_id, model_id, file_path):
     """Predict."""
     # [START automl_vision_object_detection_predict]
@@ -38,19 +41,24 @@ def predict(project_id, model_id, file_path):
     # params is additional domain-specific parameters.
     # score_threshold is used to filter the result
     # https://cloud.google.com/automl/docs/reference/rpc/google.cloud.automl.v1#predictrequest
-    params = {"score_threshold": "0.8"}
+    params = {"score_threshold": "0.4"}
 
     request = automl.PredictRequest(name=model_full_id, payload=payload, params=params)
 
     response = prediction_client.predict(request=request)
+    contador=0
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(result.image_object_detection.score))
+        if format(result.display_name) =='ampolla':
+            contador=contador+1
+            
+
+        #print("Predicted class score: {}".format(result.image_object_detection.score))
         bounding_box = result.image_object_detection.bounding_box
-        print("Normalized Vertices:")
-        for vertex in bounding_box.normalized_vertices:
-            print("\tX: {}, Y: {}".format(vertex.x, vertex.y))
+    print(contador)
     # [END automl_vision_object_detection_predict]
 
-print(predict("206867861335","IOD8713214034729500672","test.jpeg"))
+while(1):
+    print(predict("206867861335","IOD8713214034729500672","input.jpg"))
+    time.sleep(1)   
+
